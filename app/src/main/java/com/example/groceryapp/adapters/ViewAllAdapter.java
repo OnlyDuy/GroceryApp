@@ -1,6 +1,7 @@
 package com.example.groceryapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.groceryapp.R;
+import com.example.groceryapp.activities.DetailedActivity;
 import com.example.groceryapp.activities.ViewAllActivity;
 import com.example.groceryapp.models.PopularModel;
 import com.example.groceryapp.models.RecommendedModel;
@@ -48,6 +50,15 @@ public class ViewAllAdapter extends RecyclerView.Adapter<ViewAllAdapter.ViewHold
         if (list.get(position).getType().equals("milk")) {
             holder.price.setText(list.get(position).getPrice()+"/litre");
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DetailedActivity.class);
+                intent.putExtra("detail", list.get(holder.getAdapterPosition()));
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
