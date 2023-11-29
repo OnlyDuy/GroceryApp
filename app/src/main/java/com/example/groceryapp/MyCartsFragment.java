@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.groceryapp.adapters.MyCartAdapter;
@@ -42,6 +44,10 @@ public class MyCartsFragment extends Fragment {
 
     TextView overTotalAmount;
 
+    Button buyNow;
+    int totalBill;
+    ProgressBar progressBar;
+
     public MyCartsFragment() {
         // Required empty public constructor
     }
@@ -53,12 +59,18 @@ public class MyCartsFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-        recyclerView = root.findViewById(R.id.recyclerview);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        overTotalAmount = root.findViewById(R.id.total_view_price);
+        progressBar = root.findViewById(R.id.progressbar);
+        progressBar.setVisibility(View.VISIBLE);
         LocalBroadcastManager.getInstance(getActivity())
                 .registerReceiver(mMessengeReceiver, new IntentFilter("MyTotalAmount"));
+
+        overTotalAmount = root.findViewById(R.id.total_view_price);
+
+        recyclerView = root.findViewById(R.id.recyclerview);
+        recyclerView.setVisibility(View.GONE);
+        buyNow = root.findViewById(R.id.buy_now);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         cartModeList = new ArrayList<>();
         cartAdapter = new MyCartAdapter(getActivity(), cartModeList);
@@ -73,6 +85,8 @@ public class MyCartsFragment extends Fragment {
                                 MyCartModel cartModel = documentSnapshot.toObject(MyCartModel.class);
                                 cartModeList.add(cartModel);
                                 cartAdapter.notifyDataSetChanged();
+                                progressBar.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
                             }
                         }
                     }
