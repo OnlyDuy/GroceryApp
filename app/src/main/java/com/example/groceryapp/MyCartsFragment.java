@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.groceryapp.activities.PlaceOrderActivity;
 import com.example.groceryapp.adapters.MyCartAdapter;
 import com.example.groceryapp.models.MyCartModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,8 +78,8 @@ public class MyCartsFragment extends Fragment {
         cartAdapter = new MyCartAdapter(getActivity(), cartModeList);
         recyclerView.setAdapter(cartAdapter);
 
-        db.collection("AddToCart").document(auth.getCurrentUser().getUid())
-                .collection("CurrentUser").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("CurrentUser").document(auth.getCurrentUser().getUid())
+                .collection("AddToCart").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -91,6 +93,14 @@ public class MyCartsFragment extends Fragment {
                         }
                     }
                 });
+        buyNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), PlaceOrderActivity.class);
+                intent.putExtra("itemList", (Serializable) cartModeList);
+                startActivity(intent);
+            }
+        });
 
         return root;
     }
