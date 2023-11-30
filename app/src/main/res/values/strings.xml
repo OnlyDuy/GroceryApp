@@ -7,21 +7,6 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-<<<<<<< Updated upstream
-=======
-    <string name="profile">Profile</string>
-    <string name="home">Home</string>
-    <string name="category">Category</string>
-    <string name="offers">Offers</string>
-    <string name="new_products">New Products</string>
-    <string name="my_orders">My Orders</string>
-    <string name="my_carts">My Carts</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="description">Milk is a nutritious and widely consumed liquid that serves as a primary source of nutrition for young mammals, including humans. It is produced by the mammary glands of female mammals, typically from cows, goats, sheep, and other animals.</string>
-    <string name="title_activity_add_product">AddProductActivity</string>
-
->>>>>>> Stashed changes
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
