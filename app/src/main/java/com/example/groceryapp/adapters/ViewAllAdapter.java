@@ -14,9 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.groceryapp.R;
 import com.example.groceryapp.activities.DetailedActivity;
-import com.example.groceryapp.activities.ViewAllActivity;
-import com.example.groceryapp.models.PopularModel;
-import com.example.groceryapp.models.RecommendedModel;
 import com.example.groceryapp.models.ViewAllModel;
 
 import java.util.List;
@@ -25,7 +22,7 @@ public class ViewAllAdapter extends RecyclerView.Adapter<ViewAllAdapter.ViewHold
 
     Context context;
     List<ViewAllModel> list;
-    public ViewAllAdapter(ViewAllActivity context, List<ViewAllModel> list) {
+    public ViewAllAdapter(Context context, List<ViewAllModel> list) {
         this.context = context;
         this.list = list;
     }
