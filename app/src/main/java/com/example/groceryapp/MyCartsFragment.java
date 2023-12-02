@@ -64,8 +64,6 @@ public class MyCartsFragment extends Fragment {
 
         progressBar = root.findViewById(R.id.progressbar);
         progressBar.setVisibility(View.VISIBLE);
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(mMessengeReceiver, new IntentFilter("MyTotalAmount"));
 
         overTotalAmount = root.findViewById(R.id.total_view_price);
 
@@ -88,12 +86,16 @@ public class MyCartsFragment extends Fragment {
                                 String documentId = documentSnapshot.getId();
 
                                 MyCartModel cartModel = documentSnapshot.toObject(MyCartModel.class);
+
                                 cartModel.setDocumentId(documentId);
+
                                 cartModeList.add(cartModel);
                                 cartAdapter.notifyDataSetChanged();
                                 progressBar.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
                             }
+
+                            calculateTotalAmount(cartModeList);
                         }
                     }
                 });
@@ -109,11 +111,12 @@ public class MyCartsFragment extends Fragment {
         return root;
     }
 
-    public BroadcastReceiver mMessengeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            int totalBill = intent.getIntExtra("totalAmount", 0);
-            overTotalAmount.setText("Total Bill: " + totalBill + "$");
+    private void calculateTotalAmount(List<MyCartModel> cartModeList) {
+        double totalAmount = 0.0;
+        for (MyCartModel myCartModel: cartModeList) {
+            totalAmount += myCartModel.getTotalPrice();
         }
-    };
+
+        overTotalAmount.setText("total Amount: "+totalAmount);
+    }
 }
