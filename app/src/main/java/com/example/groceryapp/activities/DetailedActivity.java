@@ -3,8 +3,11 @@ package com.example.groceryapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -152,5 +155,9 @@ public class DetailedActivity extends AppCompatActivity {
                         finish();
                     }
                 });
+        // Gửi broadcast
+//        Intent intent = new Intent("update_cart_display");
+//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//        Log.d("MyCartsFragment", "Broadcast sent");
     }
 }

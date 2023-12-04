@@ -1,4 +1,4 @@
-package com.example.groceryapp;
+package com.example.groceryapp.ui.mycarts;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,11 +8,13 @@ import android.media.tv.BroadcastInfoRequest;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.groceryapp.R;
 import com.example.groceryapp.activities.PlaceOrderActivity;
 import com.example.groceryapp.adapters.MyCartAdapter;
 import com.example.groceryapp.models.MyCartModel;
@@ -49,7 +52,8 @@ public class MyCartsFragment extends Fragment {
     Button buyNow;
     int totalBill;
     ProgressBar progressBar;
-
+    ConstraintLayout constraint1;
+    ConstraintLayout constraint2;
     public MyCartsFragment() {
         // Required empty public constructor
     }
@@ -58,12 +62,21 @@ public class MyCartsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_my_carts, container, false);
+//
+//        // Đăng ký broadcast receiver
+//        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(
+//                updateCartDisplayReceiver,
+//                new IntentFilter("update_cart_display")
+//        );
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
         progressBar = root.findViewById(R.id.progressbar);
         progressBar.setVisibility(View.VISIBLE);
+
+        constraint1 = root.findViewById(R.id.constraint1);
+        constraint2 = root.findViewById(R.id.constraint2);
 
         overTotalAmount = root.findViewById(R.id.total_view_price);
 
@@ -93,6 +106,8 @@ public class MyCartsFragment extends Fragment {
                                 cartAdapter.notifyDataSetChanged();
                                 progressBar.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
+                                constraint1.setVisibility(View.GONE);
+                                constraint2.setVisibility(View.VISIBLE);
                             }
 
                             calculateTotalAmount(cartModeList);
@@ -110,6 +125,24 @@ public class MyCartsFragment extends Fragment {
 
         return root;
     }
+//
+//    private BroadcastReceiver updateCartDisplayReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            // Cập nhật giao diện người dùng theo cần thiết
+//            // Hiển thị constraint1 và ẩn constraint2
+//            Log.d("MyCartsFragment", "Broadcast received");
+//            constraint1.setVisibility(View.GONE);
+//            constraint2.setVisibility(View.VISIBLE);
+//        }
+//    };
+//
+//    @Override
+//    public void onDestroyView() {
+//        // Hủy đăng ký receiver để tránh rò rỉ bộ nhớ
+//        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(updateCartDisplayReceiver);
+//        super.onDestroyView();
+//    }
 
     private void calculateTotalAmount(List<MyCartModel> cartModeList) {
         double totalAmount = 0.0;

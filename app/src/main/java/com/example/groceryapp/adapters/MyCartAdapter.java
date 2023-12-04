@@ -1,7 +1,6 @@
 package com.example.groceryapp.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.groceryapp.R;
 import com.example.groceryapp.models.MyCartModel;
+import com.example.groceryapp.models.MyOrderModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,24 +53,27 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
         holder.totalPrice.setText(Integer.toString(cartModelList.get(position).getTotalPrice()));
 
         holder.deleteItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firestore.collection("CurrentUser").document(auth.getCurrentUser().getUid())
-                        .collection("AddToCart")
-                        .document(cartModelList.get(position).getDocumentId())
-                        .delete()
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    cartModelList.remove(cartModelList.get(position));
-                                    notifyDataSetChanged();
-                                    Toast.makeText(context, "Item Deleted", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(context, "Error" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    @Override
+                                    public void onClick(View v) {
+                                        int currentPosition = holder.getAdapterPosition();
+                                        if (currentPosition != RecyclerView.NO_POSITION) {
+                                            firestore.collection("CurrentUser").document(auth.getCurrentUser().getUid())
+                                                    .collection("AddToCart")
+                                                    .document(cartModelList.get(currentPosition).getDocumentId())
+                                                    .delete()
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        cartModelList.remove(cartModelList.get(currentPosition));
+                                        notifyDataSetChanged();
+                                        Toast.makeText(context, "Item Deleted", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "Error" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }
             }
         });
     }
