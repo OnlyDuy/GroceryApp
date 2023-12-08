@@ -87,7 +87,7 @@ public class DetailedActivity extends AppCompatActivity {
             price.setText("Price: $"+viewAllModel.getPrice()+"/kg");
 
             if (viewAllModel.getType().equals("egg")) {
-                price.setText("Price: $"+viewAllModel.getPrice()+"/dozen");
+                price.setText ("Price: $"+viewAllModel.getPrice()+"/dozen");
             }
 
             if (viewAllModel.getType().equals("milk")) {

@@ -1,6 +1,7 @@
 package com.example.groceryapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -12,8 +13,11 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.groceryapp.activities.HomeActivity;
+import com.example.groceryapp.activities.LoginActivity;
 import com.example.groceryapp.ui.home.HomeFragment;
 
+import com.example.groceryapp.ui.profile.ProfileFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -24,6 +28,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.groceryapp.databinding.ActivityMainBinding;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.concurrent.ScheduledFuture;
 
@@ -38,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,25 +64,78 @@ public class MainActivity extends AppCompatActivity {
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_profile , R.id.nav_category, R.id.nav_offers,
                     R.id.nav_new_products , R.id.nav_my_orders, R.id.nav_my_carts)
                 .setOpenableLayout(drawer)
                 .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        // Set the item click listener for the logout item
+        navigationView.setNavigationItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.nav_logout) {
+                // Handle logout click
+                logout();
+                return true;
+            }else if (item.getItemId() == R.id.nav_profile) {
+                // Handle profile click using NavController
+                navController.navigate(R.id.nav_profile);
+                drawer.closeDrawers();
+                return true;
+            }else if (item.getItemId() == R.id.nav_home) {
+                // Handle profile click using NavController
+                navController.navigate(R.id.nav_home);
+                drawer.closeDrawers();
+                return true;
+            }else if (item.getItemId() == R.id.nav_category) {
+                // Handle profile click using NavController
+                navController.navigate(R.id.nav_category);
+                drawer.closeDrawers();
+                return true;
+            }else if (item.getItemId() == R.id.nav_offers) {
+                // Handle profile click using NavController
+                navController.navigate(R.id.nav_offers);
+                drawer.closeDrawers();
+                return true;
+            }else if (item.getItemId() == R.id.nav_new_products) {
+                // Handle profile click using NavController
+                navController.navigate(R.id.nav_new_products);
+                drawer.closeDrawers();
+                return true;
+            }else if (item.getItemId() == R.id.nav_my_orders) {
+                // Handle profile click using NavController
+                navController.navigate(R.id.nav_my_orders);
+                drawer.closeDrawers();
+                return true;
+            }
+            else if (item.getItemId() == R.id.nav_my_carts) {
+                // Handle profile click using NavController
+                navController.navigate(R.id.nav_my_carts);
+                drawer.closeDrawers();
+                return true;
+            }
+
+            // Add other cases as needed
+            return false;
+        });
+
     }
-//
-//    private void loadHomeFragment() {
-//        // Tạo và hiển thị HomeFragment
-//        HomeFragment homeFragment = new HomeFragment();
-//        getSupportFragmentManager().beginTransaction()
-//                .replace(R.id.fragment_container, homeFragment)
-//                .commit();
-//    }
+
+    private void logout() {
+        auth = FirebaseAuth.getInstance();
+        auth.signOut();
+        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     private boolean isConnected (Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

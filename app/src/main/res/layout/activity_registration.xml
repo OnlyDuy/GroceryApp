@@ -48,6 +48,38 @@
         app:layout_constraintWidth_percent=".8" />
 
     <EditText
+        android:id="@+id/phone_reg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/edittext_background"
+        android:drawableLeft="@drawable/ic_baseline_local_phone_24"
+        android:drawablePadding="13dp"
+        android:elevation="3dp"
+        android:padding="13dp"
+        android:hint="Phone Number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email_reg"
+        app:layout_constraintWidth_percent=".8" />
+
+    <EditText
+        android:id="@+id/address_reg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:background="@drawable/edittext_background"
+        android:drawableLeft="@drawable/ic_baseline_location_on_24"
+        android:drawablePadding="13dp"
+        android:elevation="3dp"
+        android:padding="13dp"
+        android:hint="Address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/phone_reg"
+        app:layout_constraintWidth_percent=".8" />
+
+    <EditText
         android:id="@+id/password_reg"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -61,7 +93,7 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email_reg"
+        app:layout_constraintTop_toBottomOf="@+id/address_reg"
         app:layout_constraintWidth_percent=".8" />
 
     <Button

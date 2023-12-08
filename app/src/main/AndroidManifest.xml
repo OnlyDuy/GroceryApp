@@ -2,9 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
@@ -14,18 +20,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp"
         tools:targetApi="31">
-        <activity
-            android:name=".activities.PlaceOrderActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activities.HomeActivity"
-            android:exported="true" />
+            android:exported="true"></activity>
+
         <activity
             android:name=".activities.RegistrationActivity"
-            android:exported="true" />
+            android:exported="true"></activity>
+
         <activity
             android:name=".activities.LoginActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".activities.DetailedActivity"
             android:exported="false" />
@@ -36,13 +49,8 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.GroceryApp.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.GroceryApp.NoActionBar"></activity>
+        <activity android:name=".activities.PlaceOrderActivity"></activity>
 
         <meta-data
             android:name="preloaded_fonts"

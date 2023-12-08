@@ -24,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class RegistrationActivity extends AppCompatActivity {
 
     Button signUp;
-    EditText name,email,password;
+    EditText name,email,password,phone,address;
     TextView signIn;
     FirebaseAuth auth;
     FirebaseDatabase database;
@@ -44,6 +44,8 @@ public class RegistrationActivity extends AppCompatActivity {
         signUp = findViewById(R.id.reg_btn);
         name = findViewById(R.id.name);
         email = findViewById(R.id.email_reg);
+        phone = findViewById(R.id.phone_reg);
+        address = findViewById(R.id.address_reg);
         password = findViewById(R.id.password_reg);
         signIn = findViewById(R.id.sign_in);
 
@@ -69,6 +71,8 @@ public class RegistrationActivity extends AppCompatActivity {
         String userName = name.getText().toString();
         String userEmail = email.getText().toString();
         String userPassword = password.getText().toString();
+        String userPhone = phone.getText().toString();
+        String userAddress = address.getText().toString();
 
         if(TextUtils.isEmpty(userName)){
             Toast.makeText(this, "Name is empty", Toast.LENGTH_SHORT).show();
@@ -90,6 +94,22 @@ public class RegistrationActivity extends AppCompatActivity {
             return;
         }
 
+        if(TextUtils.isEmpty(userPhone)){
+            Toast.makeText(this, "Phone is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(TextUtils.isEmpty(userAddress)){
+            Toast.makeText(this, "Address is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //Validation phone number
+        if(userPhone.length() < 10){
+            Toast.makeText(this, "Phone number must be 10 digits", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         //Create User
         auth.createUserWithEmailAndPassword(userEmail,userPassword)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -97,7 +117,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
 
-                            UserModel userModel = new UserModel(userName,userEmail,userPassword);
+                            UserModel userModel = new UserModel(userName,userEmail,userPassword,userPhone,userAddress);
                             String id = task.getResult().getUser().getUid();
                             database.getReference().child("Users").child(id).setValue(userModel);
                             progressBar.setVisibility(View.GONE);

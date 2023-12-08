@@ -1,7 +1,4 @@
- package com.example.groceryapp.activities;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.groceryapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,26 +10,28 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.groceryapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
- public class LoginActivity extends AppCompatActivity {
+import com.example.groceryapp.MainActivity;
+import com.example.groceryapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+public class LoginActivity extends AppCompatActivity {
 
     Button signIn;
     TextView signUp;
-    EditText email,password;
+    EditText email, password;
     FirebaseAuth auth;
     ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         auth = FirebaseAuth.getInstance();
-
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
 
@@ -41,55 +40,60 @@ import com.google.firebase.auth.FirebaseAuth;
         password = findViewById(R.id.password_login);
         signUp = findViewById(R.id.sign_up);
 
-        signUp.setOnClickListener(new View.OnClickListener(){
+        signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
             }
         });
 
-        signIn.setOnClickListener(new View.OnClickListener(){
+        signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginUser();
                 progressBar.setVisibility(View.VISIBLE);
             }
         });
+
+        // Check if the user is already logged in
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish(); // Close the LoginActivity to prevent going back to it with the back button
+        }
     }
 
-     private void loginUser() {
-         String userEmail = email.getText().toString();
-         String userPassword = password.getText().toString();
+    private void loginUser() {
+        String userEmail = email.getText().toString();
+        String userPassword = password.getText().toString();
 
-         if(TextUtils.isEmpty(userEmail)){
-             Toast.makeText(this, "Email is empty", Toast.LENGTH_SHORT).show();
-             return;
-         }
+        if (TextUtils.isEmpty(userEmail)) {
+            Toast.makeText(this, "Email is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-         if(TextUtils.isEmpty(userPassword)){
-             Toast.makeText(this, "Password is empty", Toast.LENGTH_SHORT).show();
-             return;
-         }
+        if (TextUtils.isEmpty(userPassword)) {
+            Toast.makeText(this, "Password is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-         if(userPassword.length() < 6){
-             Toast.makeText(this, "Password must be greater than 6 characters", Toast.LENGTH_SHORT).show();
-             return;
-         }
+        if (userPassword.length() < 6) {
+            Toast.makeText(this, "Password must be greater than 6 characters", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-         //Login user
-         auth.signInWithEmailAndPassword(userEmail,userPassword)
-                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                     @Override
-                     public void onComplete(@NonNull Task<AuthResult> task) {
-                         if(task.isSuccessful()){
-                             Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                             progressBar.setVisibility(View.GONE);
-                         }
-                            else{
-                                progressBar.setVisibility(View.GONE);
-                                Toast.makeText(LoginActivity.this, "Error: "+task.isSuccessful(), Toast.LENGTH_SHORT).show();
-                            }
-                     }
-                 });
-     }
- }
+        // Login user
+        auth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish(); // Close the LoginActivity to prevent going back to it with the back button
+                    } else {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(LoginActivity.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+}
