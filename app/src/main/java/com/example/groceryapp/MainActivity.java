@@ -10,9 +10,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.groceryapp.activities.HomeActivity;
 import com.example.groceryapp.activities.LoginActivity;
 import com.example.groceryapp.ui.home.HomeFragment;
@@ -20,16 +24,21 @@ import com.example.groceryapp.ui.home.HomeFragment;
 import com.example.groceryapp.ui.profile.ProfileFragment;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
-
+import com.example.groceryapp.models.UserModel;
 import com.example.groceryapp.databinding.ActivityMainBinding;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.ScheduledFuture;
 
@@ -44,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+    FirebaseDatabase database;
 
     FirebaseAuth auth;
 
@@ -126,7 +136,42 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
+        // Initialize FirebaseDatabase instance
+        database = FirebaseDatabase.getInstance();
+
+        // Set the navigation header data
+        setNavHeader();
+
     }
+
+    private void setNavHeader() {
+        NavigationView navigationView = binding.navView; // Assuming "binding" is your ViewBinding instance
+
+        // Get the header view
+        View headerView = navigationView.getHeaderView(0);
+
+        // Find the views within the header view by their IDs
+        ImageView headerImageView = headerView.findViewById(R.id.imageView);
+        TextView headerTitleTextView = headerView.findViewById(R.id.textView2);
+
+        // Update the content of the views with Firebase authentication data
+        database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            UserModel userModel = snapshot.getValue(UserModel.class);
+                            Glide.with(getApplicationContext()).load(userModel.getProfileImg()).into(headerImageView);
+                            headerTitleTextView.setText(userModel.getName());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                })
+        ;
+        }
 
     private void logout() {
         auth = FirebaseAuth.getInstance();
