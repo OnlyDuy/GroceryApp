@@ -37,6 +37,7 @@ import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -144,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void setNavHeader() {
+    public void setNavHeader() {
         NavigationView navigationView = binding.navView; // Assuming "binding" is your ViewBinding instance
 
         // Get the header view
@@ -155,23 +156,26 @@ public class MainActivity extends AppCompatActivity {
         TextView headerTitleTextView = headerView.findViewById(R.id.textView2);
 
         // Update the content of the views with Firebase authentication data
-        database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        DatabaseReference userReference = database.getReference().child("Users").child(FirebaseAuth.getInstance().getUid());
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserModel userModel = snapshot.getValue(UserModel.class);
+                if (userModel != null) {
+                    Glide.with(getApplicationContext()).load(userModel.getProfileImg()).into(headerImageView);
+                    headerTitleTextView.setText(userModel.getName());  // Corrected line
+                }
+            }
 
-                            UserModel userModel = snapshot.getValue(UserModel.class);
-                            Glide.with(getApplicationContext()).load(userModel.getProfileImg()).into(headerImageView);
-                            headerTitleTextView.setText(userModel.getName());
-                    }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Handle the error if needed
+            }
+        });
+    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                })
-        ;
-        }
+
 
     private void logout() {
         auth = FirebaseAuth.getInstance();

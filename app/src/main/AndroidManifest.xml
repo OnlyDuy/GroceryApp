@@ -20,17 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp"
         tools:targetApi="31">
-
         <activity
-            android:name=".activities.HomeActivity"
-            android:exported="true"></activity>
-
-        <activity
-            android:name=".activities.RegistrationActivity"
-            android:exported="true"></activity>
-
-        <activity
-            android:name=".activities.LoginActivity"
+            android:name=".AddProduct"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,6 +30,21 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activities.HomeActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.RegistrationActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activities.LoginActivity"
+            android:exported="true">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
         <activity
             android:name=".activities.DetailedActivity"
             android:exported="false" />
@@ -49,8 +55,8 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.GroceryApp.NoActionBar"></activity>
-        <activity android:name=".activities.PlaceOrderActivity"></activity>
+            android:theme="@style/Theme.GroceryApp.NoActionBar" />
+        <activity android:name=".activities.PlaceOrderActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
