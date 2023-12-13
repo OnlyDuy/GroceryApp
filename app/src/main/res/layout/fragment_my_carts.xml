@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MyCartsFragment">
+    tools:context=".ui.mycarts.MyCartsFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <ProgressBar
@@ -17,7 +17,7 @@
         android:id="@+id/constraint1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             app:layout_constraintVertical_bias=".3"
@@ -49,7 +49,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/total_view_price"

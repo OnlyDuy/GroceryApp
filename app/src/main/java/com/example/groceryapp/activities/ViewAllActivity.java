@@ -2,6 +2,7 @@ package com.example.groceryapp.activities;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -40,9 +41,18 @@ public class ViewAllActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all);
 
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        // Bắt sự kiện click cho nút back
+        ImageButton btnBack = findViewById(R.id.btn_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed(); // Quay lại màn hình trước đó
+            }
+        });
 
         progressBar = findViewById(R.id.progressbar);
         progressBar.setVisibility(View.VISIBLE);

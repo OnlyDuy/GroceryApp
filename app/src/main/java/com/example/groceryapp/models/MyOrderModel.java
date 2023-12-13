@@ -1,26 +1,39 @@
 package com.example.groceryapp.models;
 
 import java.io.Serializable;
+import java.util.Date;
 
-public class MyCartModel implements Serializable {
+public class MyOrderModel implements Serializable {
     String productName;
     String productPrice;
     String currentDate;
     String currentTime;
     int totalQuantity;
     int totalPrice;
+
     String documentId;
 
-    public MyCartModel() {
+    private Date orderTime;
+
+    public MyOrderModel() {
     }
 
-    public MyCartModel(String productName, String productPrice, String currentDate, String currentTime, int totalQuantity, int totalPrice) {
+    public MyOrderModel(String productName, String productPrice, String currentDate, String currentTime, int totalQuantity, int totalPrice, Date orderTime) {
         this.productName = productName;
         this.productPrice = productPrice;
         this.currentDate = currentDate;
         this.currentTime = currentTime;
         this.totalQuantity = totalQuantity;
         this.totalPrice = totalPrice;
+        this.orderTime = orderTime;
+    }
+
+    public Date getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(Date orderTime) {
+        this.orderTime = orderTime;
     }
 
     public String getDocumentId() {
@@ -79,4 +92,3 @@ public class MyCartModel implements Serializable {
         this.totalPrice = totalPrice;
     }
 }
-
