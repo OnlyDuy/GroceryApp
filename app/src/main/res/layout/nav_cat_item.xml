@@ -14,8 +14,10 @@
         android:orientation="horizontal" >
         
         <ImageView
+            android:background="@drawable/border"
             android:id="@+id/cat_nav_img"
             android:scaleType="centerCrop"
+            android:src="@drawable/fruits"
             android:layout_width="150dp"
             android:layout_height="150dp" />
 
