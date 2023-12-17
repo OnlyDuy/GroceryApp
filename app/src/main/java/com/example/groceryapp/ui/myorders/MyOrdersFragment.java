@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyOrdersFragment extends Fragment {
     FirebaseFirestore db;
@@ -47,6 +49,7 @@ public class MyOrdersFragment extends Fragment {
     ProgressBar progressBar;
     ConstraintLayout constraint1;
     ConstraintLayout constraint2;
+    private static final int[] COLORS = {R.color.red, R.color.yellow, R.color.green};
     public MyOrdersFragment() {
         // Required empty public constructor
     }
@@ -78,40 +81,75 @@ public class MyOrdersFragment extends Fragment {
                 .collection("MyOrder").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.getResult().isEmpty()) {
-                            // Hiển thị constaint1 nếu danh sách rỗng
-                            constraint1.setVisibility(View.VISIBLE);
-                            constraint2.setVisibility(View.GONE);
-                        } else if (task.isSuccessful()) {
-                            // Hiển thị constaint2 nếu có dữ liệu
-                            constraint1.setVisibility(View.GONE);
-                            constraint2.setVisibility(View.VISIBLE);
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null && !task.getResult().isEmpty()) {
+                                constraint1.setVisibility(View.GONE);
+                                constraint2.setVisibility(View.VISIBLE);
 
-                            for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                                // Tạo một Map để ánh xạ Current Time với màu tương ứng
+                                Map<String, Integer> timeColorMap = new HashMap<>();
 
-                                String documentId = documentSnapshot.getId();
+                                for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
+                                    DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(i);
+                                    String documentId = documentSnapshot.getId();
 
-                                MyOrderModel orderModel = documentSnapshot.toObject(MyOrderModel.class);
+                                    MyOrderModel orderModel = documentSnapshot.toObject(MyOrderModel.class);
 
-                                orderModel.setDocumentId(documentId);
+                                    if (orderModel != null) {
+                                        orderModel.setDocumentId(documentId);
 
-                                myOrderModelList.add(orderModel);
-                            }
-                            Collections.sort(myOrderModelList, new Comparator<MyOrderModel>() {
-                                @Override
-                                public int compare(MyOrderModel order1, MyOrderModel order2) {
-                                    int dateComparison = order2.getCurrentDate().compareTo(order1.getCurrentDate());
+                                        // Kiểm tra xem đã có màu được ánh xạ với Current Time chưa
+                                        if (timeColorMap.containsKey(orderModel.getCurrentTime())) {
+                                            orderModel.setColorResource(timeColorMap.get(orderModel.getCurrentTime()));
+                                        } else {
+                                            // Nếu chưa có, thêm một màu mới và ánh xạ nó với Current Time
+                                            int color = COLORS[timeColorMap.size() % COLORS.length];
+                                            orderModel.setColorResource(color);
+                                            timeColorMap.put(orderModel.getCurrentTime(), color);
+                                        }
 
-                                    // Nếu CurrentDate giống nhau, so sánh theo currentTime
+                                        myOrderModelList.add(orderModel);
+                                    }
+                                }
+
+                                Collections.sort(myOrderModelList, (order1, order2) -> {
+                                    int dateComparison = order1.getCurrentDate().compareTo(order2.getCurrentDate());
+
                                     if (dateComparison == 0) {
-                                        // Nếu CurrentDate giống nhau, so sánh theo currentTime
                                         return order2.getCurrentTime().compareTo(order1.getCurrentTime());
                                     }
                                     return dateComparison;
-                                }
-                            });
-                            orderAdapter.notifyDataSetChanged();
-                            calculateTotalAmount(myOrderModelList);
+                                });
+
+
+//                                for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
+//                                    DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(i);
+//                                    String documentId = documentSnapshot.getId();
+//
+//                                    MyOrderModel orderModel = documentSnapshot.toObject(MyOrderModel.class);
+//
+//                                    if (orderModel != null) {
+//                                        orderModel.setDocumentId(documentId);
+//                                        orderModel.setColorResource(COLORS[i % COLORS.length]);
+//                                        myOrderModelList.add(orderModel);
+//                                    }
+//                                }
+//
+//                                Collections.sort(myOrderModelList, (order1, order2) -> {
+//                                    int dateComparison = order1.getCurrentDate().compareTo(order2.getCurrentDate());
+//
+//                                    if (dateComparison == 0) {
+//                                        return order2.getCurrentTime().compareTo(order1.getCurrentTime());
+//                                    }
+//                                    return dateComparison;
+//                                });
+
+                                orderAdapter.notifyDataSetChanged();
+                                calculateTotalAmount(myOrderModelList);
+                            } else {
+                                constraint1.setVisibility(View.VISIBLE);
+                                constraint2.setVisibility(View.GONE);
+                            }
                         }
                         progressBar.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);

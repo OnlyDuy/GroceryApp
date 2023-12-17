@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.groceryapp.R;
@@ -46,6 +47,8 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
         holder.time.setText(myOrderModelList.get(position).getCurrentTime());
         holder.quantity.setText(Integer.toString(myOrderModelList.get(position).getTotalQuantity()));
         holder.totalPrice.setText(Integer.toString(myOrderModelList.get(position).getTotalPrice()));
+        // Set màu sắc cho background của view
+       holder.colorIndicator.setBackgroundColor(ContextCompat.getColor(context, myOrderModelList.get(position).getColorResource()));
 
     }
 
@@ -55,6 +58,7 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        public View colorIndicator;
         TextView name, price, date, time, quantity, totalPrice;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,6 +68,9 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.ViewHold
             time = itemView.findViewById(R.id.current_time);
             quantity = itemView.findViewById(R.id.total_quantity);
             totalPrice = itemView.findViewById(R.id.total_price);
+
+            // Ánh xạ trường colorIndicator từ item_my_order.xml
+            colorIndicator = itemView.findViewById(R.id.colorIndicator);
         }
     }
 }

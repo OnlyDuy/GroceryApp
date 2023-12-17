@@ -15,6 +15,8 @@ public class MyOrderModel implements Serializable {
 
     private Date orderTime;
 
+    private int colorResource; // Trường mới để lưu trữ màu sắc
+
     public MyOrderModel() {
     }
 
@@ -90,5 +92,13 @@ public class MyOrderModel implements Serializable {
 
     public void setTotalPrice(int totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public int getColorResource() {
+        return colorResource;
+    }
+
+    public void setColorResource(int colorResource) {
+        this.colorResource = colorResource;
     }
 }

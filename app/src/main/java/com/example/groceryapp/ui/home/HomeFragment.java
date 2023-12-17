@@ -93,7 +93,6 @@ public class HomeFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         scrollView.setVisibility(View.GONE);
 
-
         // Kiểm tra kết nối internet
         if (isConnected(requireContext())) {
             // Popular Items
