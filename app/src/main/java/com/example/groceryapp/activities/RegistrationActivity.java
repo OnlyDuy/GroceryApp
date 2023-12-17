@@ -3,7 +3,13 @@ package com.example.groceryapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -29,7 +35,24 @@ public class RegistrationActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseDatabase database;
     ProgressBar progressBar;
+    private boolean isConnected (Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Network network = connectivityManager.getActiveNetwork();
+            if (network != null) {
+                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+                return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
+            }
+        } else {
+            // For older Android versions, you can use the deprecated method
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                return true;
+            }
+        }
 
+        return false;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +75,12 @@ public class RegistrationActivity extends AppCompatActivity {
         signIn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+                if (!isConnected(RegistrationActivity.this)) {
+                    Toast.makeText(RegistrationActivity.this, "Không có Internet, Vui lòng kết nối", Toast.LENGTH_SHORT).show();
+                    return;
+                }else{
+                    startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
+                }
             }
         });
 
@@ -60,8 +88,13 @@ public class RegistrationActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                createUser();
-                progressBar.setVisibility(View.VISIBLE);
+                if (!isConnected(RegistrationActivity.this)) {
+                    Toast.makeText(RegistrationActivity.this, "Không có Internet, Vui lòng kết nối", Toast.LENGTH_SHORT).show();
+                    return;
+                }else {
+                    createUser();
+                    progressBar.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
