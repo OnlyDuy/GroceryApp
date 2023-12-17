@@ -27,12 +27,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MyOrdersFragment extends Fragment {
@@ -89,6 +92,10 @@ public class MyOrdersFragment extends Fragment {
                                 // Tạo một Map để ánh xạ Current Time với màu tương ứng
                                 Map<String, Integer> timeColorMap = new HashMap<>();
 
+                                // Tạo đối tượng SimpleDateFormat để chuyển đổi chuỗi thời gian
+                                SimpleDateFormat inputFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+                                SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
                                 for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
                                     DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(i);
                                     String documentId = documentSnapshot.getId();
@@ -97,6 +104,16 @@ public class MyOrdersFragment extends Fragment {
 
                                     if (orderModel != null) {
                                         orderModel.setDocumentId(documentId);
+
+                                        // Chuyển đổi thời gian hiện tại từ chuỗi "HH:mm:ss" sang "HH:mm"
+                                        try {
+                                            Date timeDate = inputFormat.parse(orderModel.getCurrentTime());
+                                            String formattedTime = outputFormat.format(timeDate);
+                                            orderModel.setCurrentTime(formattedTime);
+                                        } catch (ParseException e) {
+                                            // Xử lý ngoại lệ nếu có lỗi khi chuyển đổi thời gian
+                                            e.printStackTrace();
+                                        }
 
                                         // Kiểm tra xem đã có màu được ánh xạ với Current Time chưa
                                         if (timeColorMap.containsKey(orderModel.getCurrentTime())) {

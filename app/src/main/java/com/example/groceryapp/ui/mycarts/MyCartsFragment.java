@@ -27,6 +27,8 @@ import com.example.groceryapp.activities.PlaceOrderActivity;
 import com.example.groceryapp.adapters.MyCartAdapter;
 import com.example.groceryapp.models.MyCartModel;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -117,6 +119,9 @@ public class MyCartsFragment extends Fragment {
         buyNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Xóa dữ liệu giỏ hàng trên Firestore
+                deleteCartDataFromFirestore();
+
                 Intent intent = new Intent(getContext(), PlaceOrderActivity.class);
                 intent.putExtra("itemList", (Serializable) cartModeList);
                 startActivity(intent);
@@ -125,6 +130,33 @@ public class MyCartsFragment extends Fragment {
 
         return root;
     }
+
+    private void deleteCartDataFromFirestore() {
+        for (MyCartModel cartModel : cartModeList) {
+            // Xóa từng tài liệu trong giỏ hàng trên Firestore
+            db.collection("CurrentUser")
+                    .document(auth.getCurrentUser().getUid())
+                    .collection("AddToCart")
+                    .document(cartModel.getDocumentId())
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // Xóa thành công
+                            cartAdapter.notifyDataSetChanged();
+                            Log.d("MyCartsFragment", "DocumentSnapshot successfully deleted!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Xử lý khi xóa thất bại
+                            Log.w("MyCartsFragment", "Error deleting document", e);
+                        }
+                    });
+        }
+    }
+
 //
 //    private BroadcastReceiver updateCartDisplayReceiver = new BroadcastReceiver() {
 //        @Override
