@@ -66,7 +66,7 @@ public class NavCategoryActivity extends AppCompatActivity {
         });
 
         if (type != null && type.equalsIgnoreCase("drink")){
-            db.collection("NavCategoryDetailed").whereEqualTo("type", "drink").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("AllProducts").whereEqualTo("type", "drink").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     for (DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){
@@ -81,7 +81,7 @@ public class NavCategoryActivity extends AppCompatActivity {
         }
 
         if (type != null && type.equalsIgnoreCase("fruit")){
-            db.collection("NavCategoryDetailed").whereEqualTo("type", "fruit").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("AllProducts").whereEqualTo("type", "fruit").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     for (DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){
@@ -96,7 +96,7 @@ public class NavCategoryActivity extends AppCompatActivity {
         }
 
         if (type != null && type.equalsIgnoreCase("fish")){
-            db.collection("NavCategoryDetailed").whereEqualTo("type", "fish").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("AllProducts").whereEqualTo("type", "fish").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     for (DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){
@@ -111,7 +111,7 @@ public class NavCategoryActivity extends AppCompatActivity {
         }
 
         if (type != null && type.equalsIgnoreCase("vegetable")){
-            db.collection("NavCategoryDetailed").whereEqualTo("type", "vegetable").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("AllProducts").whereEqualTo("type", "vegetable").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     for (DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){
@@ -126,7 +126,7 @@ public class NavCategoryActivity extends AppCompatActivity {
         }
 
         if (type != null && type.equalsIgnoreCase("egg")){
-            db.collection("NavCategoryDetailed").whereEqualTo("type", "egg").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("AllProducts").whereEqualTo("type", "egg").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     for (DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){
@@ -141,7 +141,7 @@ public class NavCategoryActivity extends AppCompatActivity {
         }
 
         if (type != null && type.equalsIgnoreCase("milk")){
-            db.collection("NavCategoryDetailed").whereEqualTo("type", "milk").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("AllProducts").whereEqualTo("type", "milk").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     for (DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){

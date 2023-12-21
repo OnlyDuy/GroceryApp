@@ -6,14 +6,14 @@ public class NavCategoryDetailedModel implements Serializable {
     String name;
     String type;
     String img_url;
-    String price;
+    int price;
     String description;
     String rating;
 
     public NavCategoryDetailedModel() {
     }
 
-    public NavCategoryDetailedModel(String name, String type, String img_url, String price, String description, String rating) {
+    public NavCategoryDetailedModel(String name, String type, String img_url, int price, String description, String rating) {
         this.name = name;
         this.type = type;
         this.img_url = img_url;
@@ -62,11 +62,11 @@ public class NavCategoryDetailedModel implements Serializable {
         this.img_url = img_url;
     }
 
-    public String getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 }
