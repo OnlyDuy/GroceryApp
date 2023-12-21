@@ -23,19 +23,16 @@
         <activity
             android:name=".AddProduct"
             android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
         </activity>
 
         <activity
             android:name=".activities.HomeActivity"
             android:exported="true" />
+
         <activity
             android:name=".activities.RegistrationActivity"
             android:exported="true" />
+
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
@@ -57,6 +54,13 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.GroceryApp.NoActionBar" />
         <activity android:name=".activities.PlaceOrderActivity" />
+
+        <activity
+            android:name=".activities.NavCategoryActivity"
+            android:exported="true"
+            />
+
+        <activity android:name=".activities.NavCategoryDetailedActivity" />
 
         <meta-data
             android:name="preloaded_fonts"
