@@ -40,15 +40,30 @@
                 android:textStyle="bold"
                 android:textColor="@color/black" />
 
-            <TextView
-                android:id="@+id/nav_cat_price"
-                android:fontFamily="@font/alice"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Price"
-                android:textSize="19sp"
-                android:textStyle="bold"
-                android:textColor="@color/purple_700" />
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/alice"
+                    android:text="Price $"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/purple_700"/>
+                <TextView
+                    android:id="@+id/nav_cat_price"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/alice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="30"
+                    android:textColor="@color/purple_700"/>
+            </LinearLayout>
 
 <!--            <LinearLayout-->
 <!--                android:layout_width="match_parent"-->

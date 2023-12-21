@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.tv.BroadcastInfoRequest;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.groceryapp.R;
 import com.example.groceryapp.activities.PlaceOrderActivity;
@@ -116,17 +122,23 @@ public class MyCartsFragment extends Fragment {
                         }
                     }
                 });
-        buyNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Xóa dữ liệu giỏ hàng trên Firestore
-                deleteCartDataFromFirestore();
+        if (isConnected(requireContext())) {
+            buyNow.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Xóa dữ liệu giỏ hàng trên Firestore
+                    deleteCartDataFromFirestore();
 
-                Intent intent = new Intent(getContext(), PlaceOrderActivity.class);
-                intent.putExtra("itemList", (Serializable) cartModeList);
-                startActivity(intent);
-            }
-        });
+                    Intent intent = new Intent(getContext(), PlaceOrderActivity.class);
+                    intent.putExtra("itemList", (Serializable) cartModeList);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            // Nếu không có kết nối, ẩn ProgressBar và hiển thị thông báo Toast
+            progressBar.setVisibility(View.VISIBLE);
+            Toast.makeText(requireContext(), "Không có Internet, Vui lòng kết nối", Toast.LENGTH_LONG).show();
+        }
 
         return root;
     }
@@ -183,5 +195,24 @@ public class MyCartsFragment extends Fragment {
         }
 
         overTotalAmount.setText("total Amount: "+totalAmount);
+    }
+
+    private boolean isConnected (Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Network network = connectivityManager.getActiveNetwork();
+            if (network != null) {
+                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+                return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
+            }
+        } else {
+            // For older Android versions, you can use the deprecated method
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

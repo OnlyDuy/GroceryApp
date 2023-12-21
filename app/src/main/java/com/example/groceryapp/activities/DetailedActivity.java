@@ -5,7 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -96,12 +102,18 @@ public class DetailedActivity extends AppCompatActivity {
         }
 
         addToCart = findViewById(R.id.add_to_cart);
-        addToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addedToCart();
-            }
-        });
+
+        if (isConnected(this)) {
+            addToCart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addedToCart();
+                }
+            });
+        } else {
+            Toast.makeText(getApplicationContext(), "Không có Internet, Vui lòng kết nối", Toast.LENGTH_LONG).show();
+        }
+
         addItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -169,5 +181,23 @@ public class DetailedActivity extends AppCompatActivity {
 //        Intent intent = new Intent("update_cart_display");
 //        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 //        Log.d("MyCartsFragment", "Broadcast sent");
+    }
+
+    private boolean isConnected (Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Network network = connectivityManager.getActiveNetwork();
+            if (network != null) {
+                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+                return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
+            }
+        } else {
+            // For older Android versions, you can use the deprecated method
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

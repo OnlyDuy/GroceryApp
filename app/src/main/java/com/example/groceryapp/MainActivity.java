@@ -1,7 +1,9 @@
 package com.example.groceryapp;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+    private ConnectivityReceiver connectivityReceiver;
     FirebaseDatabase database;
 
     FirebaseAuth auth;
@@ -65,73 +68,77 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        if (isConnected(this)) {
-//            loadHomeFragment();
-        } else {
-            Toast.makeText(getApplicationContext(), "Không có Internet, Vui lòng kết nối", Toast.LENGTH_LONG).show();
-        }
-
         setSupportActionBar(binding.appBarMain.toolbar);
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        if (isConnected(this)) {
+//            loadHomeFragment();
+            // Passing each menu ID as a set of Ids because each
+            // menu should be considered as top level destinations.
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_profile , R.id.nav_category, R.id.nav_my_orders, R.id.nav_my_carts)
-                .setOpenableLayout(drawer)
-                .build();
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_home, R.id.nav_profile , R.id.nav_category, R.id.nav_my_orders, R.id.nav_my_carts)
+                    .setOpenableLayout(drawer)
+                    .build();
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+            NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+            NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
+            NavigationUI.setupWithNavController(navigationView, navController);
 
-        // Set the item click listener for the logout item
-        navigationView.setNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.nav_logout) {
-                // Handle logout click
-                logout();
-                return true;
-            }else if (item.getItemId() == R.id.nav_profile) {
-                // Handle profile click using NavController
-                navController.navigate(R.id.nav_profile);
-                drawer.closeDrawers();
-                return true;
-            }else if (item.getItemId() == R.id.nav_home) {
-                // Handle profile click using NavController
-                navController.navigate(R.id.nav_home);
-                drawer.closeDrawers();
-                return true;
-            }else if (item.getItemId() == R.id.nav_category) {
-                // Handle profile click using NavController
-                navController.navigate(R.id.nav_category);
-                drawer.closeDrawers();
-                return true;
-            }
-            else if (item.getItemId() == R.id.nav_my_orders) {
-                // Handle profile click using NavController
-                navController.navigate(R.id.nav_my_orders);
-                drawer.closeDrawers();
-                return true;
-            }
-            else if (item.getItemId() == R.id.nav_my_carts) {
-                // Handle profile click using NavController
-                navController.navigate(R.id.nav_my_carts);
-                drawer.closeDrawers();
-                return true;
-            }
+            // Set the item click listener for the logout item
+            navigationView.setNavigationItemSelectedListener(item -> {
+                if (item.getItemId() == R.id.nav_logout) {
+                    // Handle logout click
+                    logout();
+                    return true;
+                }else if (item.getItemId() == R.id.nav_profile) {
+                    // Handle profile click using NavController
+                    navController.navigate(R.id.nav_profile);
+                    drawer.closeDrawers();
+                    return true;
+                }else if (item.getItemId() == R.id.nav_home) {
+                    // Handle profile click using NavController
+                    navController.navigate(R.id.nav_home);
+                    drawer.closeDrawers();
+                    return true;
+                }else if (item.getItemId() == R.id.nav_category) {
+                    // Handle profile click using NavController
+                    navController.navigate(R.id.nav_category);
+                    drawer.closeDrawers();
+                    return true;
+                }
+                else if (item.getItemId() == R.id.nav_my_orders) {
+                    // Handle profile click using NavController
+                    navController.navigate(R.id.nav_my_orders);
+                    drawer.closeDrawers();
+                    return true;
+                }
+                else if (item.getItemId() == R.id.nav_my_carts) {
+                    // Handle profile click using NavController
+                    navController.navigate(R.id.nav_my_carts);
+                    drawer.closeDrawers();
+                    return true;
+                }
 
-            // Add other cases as needed
-            return false;
-        });
+                // Add other cases as needed
+                return false;
+            });
 
-        // Initialize FirebaseDatabase instance
-        database = FirebaseDatabase.getInstance();
+            // Initialize FirebaseDatabase instance
+            database = FirebaseDatabase.getInstance();
 
-        // Set the navigation header data
-        setNavHeader();
+            // Set the navigation header data
+            setNavHeader();
+        } else {
+            Toast.makeText(getApplicationContext(), "Không có Internet, Vui lòng kết nối", Toast.LENGTH_LONG).show();
+        }
+
+        // Khởi tạo và đăng ký ConnectivityReceiver
+        connectivityReceiver = new ConnectivityReceiver();
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(connectivityReceiver, intentFilter);
 
     }
 
@@ -164,9 +171,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
-
     private void logout() {
         auth = FirebaseAuth.getInstance();
         auth.signOut();
@@ -191,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -199,6 +202,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         compositeDisposable.clear();
         super.onDestroy();
+
+        // Hủy đăng ký ConnectivityReceiver khi Activity bị hủy
+        unregisterReceiver(connectivityReceiver);
+    }
+
+    private class ConnectivityReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Kiểm tra kết nối Internet khi sự kiện CONNECTIVITY_ACTION xảy ra
+            if (isInternetAvailable()) {
+                // Kết nối Internet đã khôi phục
+                Toast.makeText(context, "Kết nối Internet đã khôi phục", Toast.LENGTH_SHORT).show();
+                // Thực hiện các thao tác khi có kết nối Internet
+                // Ví dụ: enable button, load dữ liệu, vv.
+            } else {
+                // Kết nối Internet đã mất
+                Toast.makeText(context, "Không có kết nối Internet", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private boolean isInternetAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        }
+        return false;
     }
 
     @Override

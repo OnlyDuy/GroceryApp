@@ -1,9 +1,16 @@
 package com.example.groceryapp.ui.category;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +40,8 @@ public class CategoryFragment extends Fragment {
     List<NavCategoryModel> categoryModelList;
     NavCategoryAdapter navCategoryAdapter;
 
+    ProgressBar progressBar;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -46,24 +55,61 @@ public class CategoryFragment extends Fragment {
         navCategoryAdapter = new NavCategoryAdapter(getActivity(), categoryModelList);
         recyclerView.setAdapter(navCategoryAdapter);
 
-        db.collection("NavCategory")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+        progressBar = root.findViewById(R.id.progressbar);
 
-                                NavCategoryModel navCategoryModel = document.toObject(NavCategoryModel.class);
-                                categoryModelList.add(navCategoryModel);
-                                navCategoryAdapter.notifyDataSetChanged();
+        progressBar.setVisibility(View.VISIBLE);
+
+        // Kiểm tra kết nối Internet
+        if (isConnected(requireContext())) {
+            db.collection("NavCategory")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                    NavCategoryModel navCategoryModel = document.toObject(NavCategoryModel.class);
+                                    categoryModelList.add(navCategoryModel);
+                                    navCategoryAdapter.notifyDataSetChanged();
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), "Error"+task.getException() , Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            Toast.makeText(getActivity(), "Error"+task.getException() , Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
+                    });
+        } else {
+            // Nếu không có kết nối, ẩn ProgressBar và hiển thị thông báo Toast
+            progressBar.setVisibility(View.VISIBLE);
+            Toast.makeText(requireContext(), "Không có Internet, Vui lòng kết nối", Toast.LENGTH_LONG).show();
+        }
 
         return root;
+    }
+
+    private boolean isConnected (Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Network network = connectivityManager.getActiveNetwork();
+            if (network != null) {
+                NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+                return capabilities != null && (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI));
+            }
+        } else {
+            // For older Android versions, you can use the deprecated method
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void fetchDataFromFirebase() {
+        // Thực hiện tác vụ lấy dữ liệu từ Firebase
+        // ...
+        // Khi hoàn thành, ẩn ProgressBar
+        progressBar.setVisibility(View.GONE);
     }
 }
