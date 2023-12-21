@@ -94,5 +94,65 @@ public class NavCategoryActivity extends AppCompatActivity {
                 }
             });
         }
+
+        if (type != null && type.equalsIgnoreCase("fish")){
+            db.collection("NavCategoryDetailed").whereEqualTo("type", "fish").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    for (DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){
+                        NavCategoryDetailedModel navCategoryDetailedModel = documentSnapshot.toObject(NavCategoryDetailedModel.class);
+                        list.add(navCategoryDetailedModel);
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }
+
+        if (type != null && type.equalsIgnoreCase("vegetable")){
+            db.collection("NavCategoryDetailed").whereEqualTo("type", "vegetable").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    for (DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){
+                        NavCategoryDetailedModel navCategoryDetailedModel = documentSnapshot.toObject(NavCategoryDetailedModel.class);
+                        list.add(navCategoryDetailedModel);
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }
+
+        if (type != null && type.equalsIgnoreCase("egg")){
+            db.collection("NavCategoryDetailed").whereEqualTo("type", "egg").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    for (DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){
+                        NavCategoryDetailedModel navCategoryDetailedModel = documentSnapshot.toObject(NavCategoryDetailedModel.class);
+                        list.add(navCategoryDetailedModel);
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }
+
+        if (type != null && type.equalsIgnoreCase("milk")){
+            db.collection("NavCategoryDetailed").whereEqualTo("type", "milk").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    for (DocumentSnapshot documentSnapshot:task.getResult().getDocuments()){
+                        NavCategoryDetailedModel navCategoryDetailedModel = documentSnapshot.toObject(NavCategoryDetailedModel.class);
+                        list.add(navCategoryDetailedModel);
+                        progressBar.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        }
     }
 }
