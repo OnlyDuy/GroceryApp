@@ -10,8 +10,6 @@
     <string name="profile">Profile</string>
     <string name="home">Home</string>
     <string name="category">Category</string>
-    <string name="offers">Offers</string>
-    <string name="new_products">New Products</string>
     <string name="my_orders">My Orders</string>
     <string name="my_carts">My Carts</string>
     <string name="logout">Logout</string>

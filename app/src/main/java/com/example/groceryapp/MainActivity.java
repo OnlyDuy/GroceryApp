@@ -80,8 +80,7 @@ public class MainActivity extends AppCompatActivity {
         // menu should be considered as top level destinations.
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_profile , R.id.nav_category,
-                    R.id.nav_new_products , R.id.nav_my_orders, R.id.nav_my_carts)
+                R.id.nav_home, R.id.nav_profile , R.id.nav_category, R.id.nav_my_orders, R.id.nav_my_carts)
                 .setOpenableLayout(drawer)
                 .build();
 
@@ -110,12 +109,8 @@ public class MainActivity extends AppCompatActivity {
                 navController.navigate(R.id.nav_category);
                 drawer.closeDrawers();
                 return true;
-            }else if (item.getItemId() == R.id.nav_new_products) {
-                // Handle profile click using NavController
-                navController.navigate(R.id.nav_new_products);
-                drawer.closeDrawers();
-                return true;
-            }else if (item.getItemId() == R.id.nav_my_orders) {
+            }
+            else if (item.getItemId() == R.id.nav_my_orders) {
                 // Handle profile click using NavController
                 navController.navigate(R.id.nav_my_orders);
                 drawer.closeDrawers();
