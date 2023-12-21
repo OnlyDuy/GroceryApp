@@ -41,8 +41,7 @@ public class CategoryFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         recyclerView = root.findViewById(R.id.cat_rec);
 
-        // Popular Items
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         categoryModelList = new ArrayList<>();
         navCategoryAdapter = new NavCategoryAdapter(getActivity(), categoryModelList);
         recyclerView.setAdapter(navCategoryAdapter);
