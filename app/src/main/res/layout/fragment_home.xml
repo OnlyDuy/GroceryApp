@@ -57,32 +57,21 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/alice"
-                    android:text="Popular Products"
+                    android:text="Grocery Home"
                     android:textSize="18sp"
                     android:textStyle="bold">
 
                 </TextView>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/view_all_popular"
-                    android:fontFamily="@font/alice"
-                    android:layout_weight="1"
-                    android:text="View All"
-                    android:gravity="end"
-                    android:layout_marginRight="7dp"
-                    android:textSize="16sp"
-                    android:textColor="@color/purple_700">
-
-                </TextView>
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:id="@+id/pop_rec">
+                android:id="@+id/recommended_rec">
 
             </androidx.recyclerview.widget.RecyclerView>
+
             <LinearLayout
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -122,6 +111,7 @@
                 android:id="@+id/explore_rec">
 
             </androidx.recyclerview.widget.RecyclerView>
+
             <LinearLayout
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -135,32 +125,20 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/alice"
-                    android:text="Recommended"
+                    android:text="Products"
                     android:textSize="18sp"
                     android:textStyle="bold">
 
                 </TextView>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/view_all_recommended"
-                    android:fontFamily="@font/alice"
-                    android:layout_weight="1"
-                    android:text="View All"
-                    android:gravity="end"
-                    android:layout_marginRight="7dp"
-                    android:textSize="16sp"
-                    android:textColor="@color/purple_700">
-
-                </TextView>
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:id="@+id/recommended_rec">
+                android:id="@+id/pop_rec">
 
-                </androidx.recyclerview.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
     </ScrollView>

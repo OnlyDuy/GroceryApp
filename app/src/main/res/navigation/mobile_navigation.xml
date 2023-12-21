@@ -9,7 +9,11 @@
         android:id="@+id/nav_home"
         android:name="com.example.groceryapp.ui.home.HomeFragment"
         android:label="@string/home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_categoryFragment"
+            app:destination="@id/nav_category" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_profile"
@@ -22,12 +26,6 @@
         android:name="com.example.groceryapp.ui.category.CategoryFragment"
         android:label="@string/category"
         tools:layout="@layout/fragment_category" />
-
-    <fragment
-        android:id="@+id/nav_offers"
-        android:name="com.example.groceryapp.OffersFragment"
-        android:label="fragment_offers"
-        tools:layout="@layout/fragment_offers" />
 
     <fragment
         android:id="@+id/nav_new_products"

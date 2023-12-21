@@ -19,11 +19,11 @@ import java.util.List;
 public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.ViewHolder> {
 
     Context context;
-    List<RecommendedModel> list;
+    List<RecommendedModel> recommendedModelList;
 
     public RecommendedAdapter(Context context, List<RecommendedModel> list) {
         this.context = context;
-        this.list = list;
+        this.recommendedModelList = list;
     }
 
     @NonNull
@@ -34,15 +34,12 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(context).load(list.get(position).getImg_url()).into(holder.imageView);
-        holder.name.setText(list.get(position).getName());
-        holder.rating.setText(list.get(position).getRating());
-        holder.description.setText(list.get(position).getDescription());
+        Glide.with(context).load(recommendedModelList.get(position).getImg_url()).into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return recommendedModelList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -52,9 +49,6 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.rec_img);
-            name = itemView.findViewById(R.id.rec_name);
-            description = itemView.findViewById(R.id.rec_dec);
-            rating = itemView.findViewById(R.id.rec_rating);
         }
     }
 }
