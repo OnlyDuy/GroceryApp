@@ -93,6 +93,7 @@
                 android:layout_gravity="end"
                 android:layout_marginRight="5dp"/>
         </LinearLayout>
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

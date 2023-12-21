@@ -42,9 +42,21 @@ public class NavCategoryDetailedAdapter extends RecyclerView.Adapter<NavCategory
     public void onBindViewHolder(@NonNull NavCategoryDetailedAdapter.ViewHolder holder, int position) {
         Glide.with(context).load(list.get(position).getImg_url()).into(holder.imageView);
         holder.name.setText(list.get(position).getName());
-        holder.price.setText(String.valueOf(list.get(position).getPrice()));
+        holder.rating.setText(list.get(position).getRating());
+        holder.description.setText(list.get(position).getDescription());
+        holder.price.setText(list.get(position).getPrice()+"/kg");
 
-        holder.buy_now.setOnClickListener(new View.OnClickListener() {
+        if (list.get(position).getType().equals("egg")) {
+            holder.price.setText(list.get(position).getPrice()+"/dozen");
+        }
+        if (list.get(position).getType().equals("milk")) {
+            holder.price.setText(list.get(position).getPrice()+"/litre");
+        }
+        if (list.get(position).getType().equals("drink")) {
+            holder.price.setText(Integer.toString(list.get(position).getPrice()));
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, NavCategoryDetailedActivity.class);
@@ -61,16 +73,15 @@ public class NavCategoryDetailedAdapter extends RecyclerView.Adapter<NavCategory
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView name,price;
-        Button buy_now;
+        TextView name,price,description,rating;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            imageView = itemView.findViewById(R.id.cat_nav_img);
+            imageView = itemView.findViewById(R.id.nav_cat_img);
             name = itemView.findViewById(R.id.nav_cat_name);
+            description = itemView.findViewById(R.id.nav_cat_description);
+            rating = itemView.findViewById(R.id.nav_cat_rating);
             price = itemView.findViewById(R.id.nav_cat_price);
-            buy_now = itemView.findViewById(R.id.buy_now);
         }
     }
 }
