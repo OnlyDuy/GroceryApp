@@ -94,6 +94,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 }else {
                     createUser();
                     progressBar.setVisibility(View.VISIBLE);
+                    startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
                 }
             }
         });

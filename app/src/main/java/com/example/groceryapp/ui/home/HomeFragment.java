@@ -24,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,6 +70,8 @@ public class HomeFragment extends Fragment {
     private List<ViewAllModel> viewAllModelList;
     private RecyclerView recyclerViewSearch;
     private ViewAllAdapter viewAllAdapter;
+
+    private TextView viewAllExploreTextView;
 
     // Home Category
     List<HomeCategory> categoryList;
@@ -200,8 +203,20 @@ public class HomeFragment extends Fragment {
                         searchProduct(s.toString());
                     }
                 }
+
             });
 
+        // Lấy tham chiếu đến TextView
+        viewAllExploreTextView = root.findViewById(R.id.view_all_explore);
+
+        // Gắn sự kiện click cho TextView
+        viewAllExploreTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển đến CategoryFragment khi TextView được click
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_categoryFragment);
+            }
+        });
         return root;
     }
 
