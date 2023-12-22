@@ -85,75 +85,22 @@ public class RegistrationActivity extends AppCompatActivity {
         });
 
 
-        signUp.setOnClickListener(new View.OnClickListener() {
+        signUp.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 if (!isConnected(RegistrationActivity.this)) {
                     Toast.makeText(RegistrationActivity.this, "Không có Internet, Vui lòng kết nối", Toast.LENGTH_SHORT).show();
                     return;
+                }else {
+                    if (!validateUserInput()) {
+                        return;
+                    }
+                    createUser();
+                    progressBar.setVisibility(View.VISIBLE);
+                    startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
                 }
-
-                // Get user input
-                String userName = name.getText().toString();
-                String userEmail = email.getText().toString();
-                String userPassword = password.getText().toString();
-                String userPhone = phone.getText().toString();
-                String userAddress = address.getText().toString();
-
-                // Validate user input
-                if (TextUtils.isEmpty(userName) || TextUtils.isEmpty(userEmail) || TextUtils.isEmpty(userPhone) ||
-                        TextUtils.isEmpty(userAddress) || TextUtils.isEmpty(userPassword) || userPhone.length() != 10 || userPassword.length() < 6) {
-
-                    // Show appropriate error messages
-                    if (TextUtils.isEmpty(userName)) {
-                        Toast.makeText(RegistrationActivity.this, "Name is empty", Toast.LENGTH_SHORT).show();
-                    }
-                    if (TextUtils.isEmpty(userEmail)) {
-                        Toast.makeText(RegistrationActivity.this, "Email is empty", Toast.LENGTH_SHORT).show();
-                    }
-                    if (TextUtils.isEmpty(userPassword)) {
-                        Toast.makeText(RegistrationActivity.this, "Password is empty", Toast.LENGTH_SHORT).show();
-                    }
-                    if (TextUtils.isEmpty(userPhone)) {
-                        Toast.makeText(RegistrationActivity.this, "Phone is empty", Toast.LENGTH_SHORT).show();
-                    }
-                    if (TextUtils.isEmpty(userAddress)) {
-                        Toast.makeText(RegistrationActivity.this, "Address is empty", Toast.LENGTH_SHORT).show();
-                    }
-                    if (userPhone.length() != 10) {
-                        Toast.makeText(RegistrationActivity.this, "Phone number must be 10 digits", Toast.LENGTH_SHORT).show();
-                    }
-                    if (userPassword.length() < 6) {
-                        Toast.makeText(RegistrationActivity.this, "Password must be greater than 6 characters", Toast.LENGTH_SHORT).show();
-                    }
-
-                    return; // Exit the method if any input is invalid
-                }
-
-                // Create User
-                auth.createUserWithEmailAndPassword(userEmail, userPassword)
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    UserModel userModel = new UserModel(userName, userEmail, userPassword, userPhone, userAddress);
-                                    String id = task.getResult().getUser().getUid();
-                                    database.getReference().child("Users").child(id).setValue(userModel);
-                                    progressBar.setVisibility(View.GONE);
-
-                                    Toast.makeText(RegistrationActivity.this, "Registration Successful", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
-                                } else {
-                                    progressBar.setVisibility(View.GONE);
-                                    Toast.makeText(RegistrationActivity.this, "Error: " + task.getException(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
             }
         });
-
-
-
     }
 
     private void createUser() {
@@ -164,41 +111,6 @@ public class RegistrationActivity extends AppCompatActivity {
         String userPhone = phone.getText().toString();
         String userAddress = address.getText().toString();
 
-//        if(TextUtils.isEmpty(userName)){
-//            Toast.makeText(this, "Name is empty", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if(TextUtils.isEmpty(userEmail)){
-//            Toast.makeText(this, "Email is empty", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if(TextUtils.isEmpty(userPassword)){
-//            Toast.makeText(this, "Password is empty", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if(userPassword.length() < 6){
-//            Toast.makeText(this, "Password must be greater than 6 characters", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if(TextUtils.isEmpty(userPhone)){
-//            Toast.makeText(this, "Phone is empty", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if(TextUtils.isEmpty(userAddress)){
-//            Toast.makeText(this, "Address is empty", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        //Validation phone number
-//        if(userPhone.length() < 10){
-//            Toast.makeText(this, "Phone number must be 10 digits", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
 
         //Create User
         auth.createUserWithEmailAndPassword(userEmail,userPassword)
@@ -221,4 +133,52 @@ public class RegistrationActivity extends AppCompatActivity {
                     }
                 });
     }
+    private boolean validateUserInput() {
+        String userName = name.getText().toString();
+        String userEmail = email.getText().toString();
+        String userPassword = password.getText().toString();
+        String userPhone = phone.getText().toString();
+        String userAddress = address.getText().toString();
+
+        // Perform your validation checks
+        if (TextUtils.isEmpty(userName)) {
+            Toast.makeText(this, "Name is empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(userEmail)) {
+            Toast.makeText(this, "Email is empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(userPassword)) {
+            Toast.makeText(this, "Password is empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (userPassword.length() < 6) {
+            Toast.makeText(this, "Password must be greater than 6 characters", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(userPhone)) {
+            Toast.makeText(this, "Phone is empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (TextUtils.isEmpty(userAddress)) {
+            Toast.makeText(this, "Address is empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Validation for phone number
+        if (userPhone.length() != 10) {
+            Toast.makeText(this, "Phone number must be 10 digits", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    // ... (Your existing methods)
 }

@@ -99,7 +99,12 @@ public class ProfileFragment extends Fragment {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             UserModel userModel = snapshot.getValue(UserModel.class);
                             if (userModel != null) {
-                                Glide.with(requireContext()).load(userModel.getProfileImg()).into(profileImg);
+                                if (userModel.getProfileImg() != null) {
+                                    Glide.with(requireContext()).load(userModel.getProfileImg()).into(profileImg);
+                                }else {
+                                    profileImg.setImageResource(R.drawable.profile);
+                                }
+
                                 name.setText(userModel.getName());
                                 email.setText(userModel.getEmail());
                                 phone.setText(userModel.getPhone());
