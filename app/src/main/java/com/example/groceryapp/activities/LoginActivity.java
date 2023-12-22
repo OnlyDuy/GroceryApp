@@ -1,6 +1,8 @@
 package com.example.groceryapp.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -9,6 +11,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.groceryapp.MainActivity;
 import com.example.groceryapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -28,6 +33,8 @@ public class LoginActivity extends AppCompatActivity {
 
     Button signIn;
     TextView signUp;
+
+    TextView forgotPassword;
     EditText email, password;
     FirebaseAuth auth;
     ProgressBar progressBar;
@@ -64,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         email = findViewById(R.id.email_login);
         password = findViewById(R.id.password_login);
         signUp = findViewById(R.id.sign_up);
+        forgotPassword = findViewById(R.id.forgot_password);
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,13 +97,59 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Check if the user is already logged in
-        FirebaseUser currentUser = auth.getCurrentUser();
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showForgotPasswordDialog();
+            }
+        });
+
+        FirebaseUser currentUser = auth.getCurrentUser(); //
         if (currentUser != null) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish(); // Close the LoginActivity to prevent going back to it with the back button
         }
     }
+
+    private void showForgotPasswordDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Đặt lại mật khẩu");
+
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_forgot_password, null);
+        final EditText emailEditText = view.findViewById(R.id.edit_text_email);
+        builder.setView(view);
+
+        builder.setPositiveButton("Gửi", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String email = emailEditText.getText().toString();
+                if (!TextUtils.isEmpty(email)) {
+                    sendPasswordResetEmail(email);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Vui lòng nhập địa chỉ email của bạn", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Hủy", null);
+
+        builder.show();
+    }
+
+    private void sendPasswordResetEmail(String email) {
+        auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Chúng tôi đã gửi một email đặt lại mật khẩu đến địa chỉ email của bạn.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Lỗi: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
 
     private void loginUser() {
         if (!isConnected(this)) {
