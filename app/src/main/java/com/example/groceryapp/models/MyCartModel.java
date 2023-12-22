@@ -2,6 +2,7 @@ package com.example.groceryapp.models;
 
 import java.io.Serializable;
 
+// Serializable: có thể được truyền giữa các thành phần của ứng dụng thông qua Intent hoặc lưu trữ dữ liệu vào bộ nhớ.
 public class MyCartModel implements Serializable {
     String productName;
     String productPrice;

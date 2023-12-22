@@ -152,6 +152,7 @@ public class DetailedActivity extends AppCompatActivity {
 
     private void addedToCart() {
         String saveCurrentDate, saveCurrentTime;
+        // Xử lý lấy thời gian hiện tại
         Calendar calForDate = Calendar.getInstance();
 
         SimpleDateFormat currentDate = new SimpleDateFormat("MM dd, yyyy");
@@ -160,8 +161,8 @@ public class DetailedActivity extends AppCompatActivity {
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
+        // Tạo HashMap cho thông tin giỏ hàng và tạo dữ liệu thông tin ấy đến tên các trường tương ứng
         final HashMap<String,Object> cartMap = new HashMap<>();
-
         cartMap.put("productName", viewAllModel.getName());
         cartMap.put("productPrice", price.getText().toString());
         cartMap.put("currentDate", saveCurrentDate);
@@ -169,6 +170,7 @@ public class DetailedActivity extends AppCompatActivity {
         cartMap.put("totalQuantity", totalQuantity);
         cartMap.put("totalPrice", totalPrice);
 
+        // Thêm dữ liệu vừa tạo vào firestore và đặt thành tên bảng là AddToCart
         firestore.collection("CurrentUser").document(auth.getCurrentUser().getUid())
                 .collection("AddToCart").add(cartMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override

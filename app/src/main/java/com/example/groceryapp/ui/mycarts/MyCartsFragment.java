@@ -105,7 +105,7 @@ public class MyCartsFragment extends Fragment {
                             for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
 
                                 String documentId = documentSnapshot.getId();
-
+                                // Lấy thông tin từ Collection có tên là AddToCart dể hiện lên màn hình
                                 MyCartModel cartModel = documentSnapshot.toObject(MyCartModel.class);
 
                                 cartModel.setDocumentId(documentId);
@@ -114,6 +114,7 @@ public class MyCartsFragment extends Fragment {
                                 cartAdapter.notifyDataSetChanged();
                                 progressBar.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
+                                // Ẩn đi constraint1 và hiện constraint2
                                 constraint1.setVisibility(View.GONE);
                                 constraint2.setVisibility(View.VISIBLE);
                             }
